@@ -38,12 +38,14 @@ def getColors(imagePath, nColors=8):
 
     # Gets the closest color and maps to the value in the finalColorMapping dictionary
     finalColorMapping = dict()
+    keysArray = []
     for color in hexColors:
         colorName = colorConverter(color)
         # print(colorName)
         if(colorName in finalColorMapping):
             finalColorMapping[colorName] += colorMapping[color]
         elif colorName not in finalColorMapping and colorName != "#000000":
+            keysArray.append(colorName)
             finalColorMapping[colorName] = colorMapping[color]
 
     # Removing garbage pixels and then turning everything into a percentile
@@ -53,14 +55,16 @@ def getColors(imagePath, nColors=8):
     totalPixels = 0
     totalPixels += np.sum(np.array(list(finalColorMapping.values())))
 
-    keysArray = list(finalColorMapping.keys())
+    keysArrayFinal = []
     for key in keysArray:
         finalColorMapping[key] = (finalColorMapping[key]/totalPixels)
-        if(finalColorMapping[key] < 0.1):
+        if(finalColorMapping[key] < 0.05):
             del finalColorMapping[key]
+        else:
+            keysArrayFinal.append(key)
 
     # Turns it into a numpy array and returns it
-    return finalColorMapping, keysArray
+    return finalColorMapping, keysArrayFinal
 
 def colorConverter(hex_color):
     # Getting CIELAB colorings of the hex_color
@@ -68,7 +72,7 @@ def colorConverter(hex_color):
     peaked_rgb = np.dstack((peaked_rgb[0], peaked_rgb[1], peaked_rgb[2]))
     peaked_lab = rgb2lab(peaked_rgb)
 
-    # Finding the distances to all colors inside of the table
+    # Finding the distances to all colors inside the table
     lab_dist = np.sqrt(
         (lab[:, :, 0] - peaked_lab[:, :, 0])**2 + (lab[:, :, 1] - peaked_lab[:, :, 1])**2 + (lab[:, :, 2] - peaked_lab[:, :, 2])**2
     )
@@ -83,6 +87,20 @@ def colorConverter(hex_color):
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
 
+def promColors(colorDict, Ncolors=5):
+    actualLength = min(len(colorDict), Ncolors)
+    sortedColorDict = dict(sorted(colorDict.items(), key=lambda item: item[1], reverse=True))
+    index = 0
+    output = np.array([])
+    for key in sortedColorDict.keys():
+        output = np.append(output, np.array([data[key].replace("-", " ").capitalize(), str(round(sortedColorDict[key]*100, 2))]))
+        index += 1
+        if index == actualLength:
+            break
+
+    return output
+
+
 def denoise():
     image = cv2.imread("output.png")
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -95,14 +113,15 @@ def bgremove1(input_path): #8 seconds
     output.save(output_path)
 
 def bgremove2():
-
     print("fuck you")
 
 if __name__ == '__main__':
     # function returns most prominent colors, with parameter n
     curr1 = time.time()
     colorDict, keys = getColors("output.png",20)
-    print(colorDict)
-    print(keys)
+    output = promColors(colorDict)
+    # print(colorDict)
+    # print(keys)
+    # print(output)
     curr2 = time.time()
     print("time to run ", curr2 - curr1)
