@@ -3,6 +3,7 @@ from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 from collections import Counter
 import cv2
+import time
 import json
 
 def get_colors(imagePath, nColors=10):
@@ -33,13 +34,14 @@ def get_colors(imagePath, nColors=10):
 
     #Gets the closest color and maps to the value in the finalColorMapping dictionary
     for color in hexColors:
-        colorName = hex2name(color)
+        colorName = colorConverter(color)
         finalColorMapping[colorName] += colorMapping[color]
 
+    del finalColorMapping["UNFUCKING USABLE PIECE OF GARBAGE SHIT"]
     #Turns it into a numpy array and returns it
     return np.array(list(finalColorMapping.values())).reshape(1, len(finalColorMapping))
 
-def hex2name(hex_color):
+def colorConverter(hex_color):
     #Opens the colors json file
     with open('colors.json', 'r') as f:
         color_table = json.loads(f.read())
@@ -65,3 +67,8 @@ def hex2name(hex_color):
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
+
+curr1 = time.time()
+get_colors("output.png", 100)
+curr2 = time.time()
+print("Current time in seconds since ", curr2-curr1)
