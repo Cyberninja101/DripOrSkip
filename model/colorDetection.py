@@ -87,34 +87,8 @@ def colorConverter(hex_color):
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
 
-
-def denoise():
-    image = cv2.imread("output.png")
-    print(image.shape())
-    # Apply Gaussian blur
-    blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
-
-    # Resize the image
-    resized_image = cv2.resize(blurred_image, (width, height), interpolation=cv2.INTER_AREA)
-
-    # Save the resized image
-    cv2.imwrite('resized_image.jpg', resized_image)
-
-
-def bgremove1(input_path):  # 8 seconds
-    output_path = 'output.png'
-    input = Image.open(input_path)
-    output = remove(input, bgcolor=(255, 255, 0, 255))
-    output.save(output_path)
-
-
-def bgremove2():
-    print("fuck you")
-
-
 # function returns most prominent colors, with parameter n
 curr1 = time.time()
-#colorDict, keys = getColors("output.png", 20)
-denoise()
+colorDict, keys = getColors("output.png", 20)
 curr2 = time.time()
 print("time to run ", curr2 - curr1)
