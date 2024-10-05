@@ -47,4 +47,4 @@ def download_file():
     return send_file('static/images/canvas_image.png', as_attachment=True)
 
 if __name__ == "__main__":
-    app.run(debug=False, use_reloader = False, host="0.0.0.0", port=8000) # Set debug = True for live changes in development
+    app.run(debug=True, use_reloader = False, host="0.0.0.0", port=8000) # Set debug = True for live changes in development
