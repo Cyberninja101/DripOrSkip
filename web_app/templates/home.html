@@ -2,32 +2,45 @@
 <html>
     <head>
         <div>
-            <h1 id="title">  Fit Check  </h2>
+            <h1 id="title">  Drip or Skip???  </h2>
         </div>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">    
     </head>
 
     </head>
-    <body>
+    <body id="backColor">
         <div id="main_container">
             <h3 class="sideBox">
                 Rating
             </h3>
-            </div>
-                <video class="video" id="myVidPlayer" muted></video>
-                <canvas class="video" id="myCanvas"></canvas>
-            <div>
+            
+            <video class="video" id="myVidPlayer" muted></video>
+            <canvas class="video" id="myCanvas"></canvas>
+        
             <h3 class="sideBox">    
                 Color
             </h3>
         </div>
         
         
+        <div id="buttonContainer">
+            <button class="buttonSize" onclick="snapshot()"> 
+                <img src="../static/images/snapshot_image.png" alt="Snapshot" width=65rem height=65rem>
+            </button>
+            <button class="buttonSize" onclick="retake()">
+                <img src="../static/images/camera_retake.png" alt="Retake" width=65rem height=65rem>
+            </button>
+        </div>
 
-        <button onclick="snapshot()" >Snapshot</button>
-        <button onclick="retake()" >retake</button>
 
-
+        <div id="textBoxes">
+            <div id="ratingText">
+                RATING TEXT
+            </div>
+            <div id="colorText">
+                COLOR TEXT
+            </div>
+        </div>
 
         <script type = "text/javascript" src = "{{ url_for('static', filename = 'js/home.js') }}"></script>
 
