@@ -6,12 +6,21 @@ const video = document.querySelector('#myVidPlayer');
 var w, h;
 canvas.style.display = "none";
 
+function retake() {
+    document.getElementById("myVidPlayer").style.display = "flex";
+    document.getElementById("myCanvas").style.display = "none";
+}
 
 function snapshot(){
     // what happens
+    // make video player dissapear
+    document.getElementById("myVidPlayer").style.display = "none";
+
     context.fillRect(0, 0, w, h);
     context.drawImage(video, 0, 0, w, h);
     canvas.style.display = "block";
+
+
 
     // attempting download server side
     const dataURL = canvas.toDataURL('image/png');
@@ -50,5 +59,5 @@ window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
         };
     })
     .catch(error => {
-        alert('You have to enable the mike and the camera');
+        alert('You have to enable the mic and the camera');
     });
