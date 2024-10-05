@@ -58,7 +58,7 @@ def getColors(imagePath, nColors=8):
     keysArrayFinal = []
     for key in keysArray:
         finalColorMapping[key] = (finalColorMapping[key]/totalPixels)
-        if(finalColorMapping[key] < 0.1):
+        if(finalColorMapping[key] < 0.05):
             del finalColorMapping[key]
         else:
             keysArrayFinal.append(key)
