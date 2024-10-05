@@ -2,7 +2,13 @@ import sys
 
 import colorDetection, yolo, cvtcolor
 
+
 def drip(image):
+    """
+    :param image: file to check
+    :return: an arr of length 2: first element is a tuple of nums (number of colors, analogous score, complimentary
+             score, split complimentary score), second element is a dictionary of all the colors
+    """
     path = yolo.crop_image(sys.path[0]+"/"+image)
     colorDetection.bgremove1(path)
     colorDict, keys = colorDetection.getColors("output.png",20)
@@ -28,4 +34,4 @@ def drip(image):
                 split_score += 1
     else:
         print("you made an outfit of one color how boring")
-    return (len(hsls), analogous_score, complimentary_score, split_score)
+    return [(len(hsls), analogous_score/len(hsls), complimentary_score/len(hsls), split_score/len(hsls)), colorDict]
