@@ -84,4 +84,4 @@ def drip(image):
 
 
 if __name__ == "__main__":
-    print(drip("andrewdataset.jpg"))
+    print(drip("andrewdataset.jpeg"))
