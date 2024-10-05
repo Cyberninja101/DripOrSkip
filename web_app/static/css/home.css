@@ -1,7 +1,30 @@
+/*
+COLOR PALETTE: 
+Orangey: #dd6e42 
+Tan: #e8dab2 
+Darker blue: #4f6d7a 
+Lighter blue: #c0d6df 
+Light grey: #eaeaea
+*/
+body {
+    font-family: "Ubuntu";
+}
+
+#backColor{
+    background: rgb(247,247,247);
+    background: linear-gradient(90deg, #eaeaea 0%, #cef4ff 100%);
+
+    filter: progid: DXImageTransform.Microsoft.gradient( startColorstr="#D7DBFF", endColorstr="#D1FFE0", GradientType=1 );
+
+}
+
 #title {
     display: flex; 
     justify-content: center; 
-
+    font-weight: bolder;
+    font-size: 3rem;
+    font-family: "Ubuntu";
+    font-weight: bold;
 }
 
 /* #myVidPlayer {
@@ -19,15 +42,40 @@
     border-radius: 20px;
 }
 
-.sideBox{
+#ratingBox{
     display: flex;
-    background-color: bisque;
-    width: 10vw;
-    height:5vh;
+    flex-direction: column;
+    background-color: #ffffff;
+    width: 15vw;
+    /* max-width: 15vw; */
+    max-height:60vh;
+    
+
+
+
     justify-content:center;
     align-content:center;
     align-items: center;
+    vertical-align: top;
     border-radius: 10px;
+    box-shadow: 10px, 10px, 10px, 10px;
+}   
+
+#colorBox{
+    display: flex;
+    background-color: #ffffff;
+    width: 15vw;
+    /* max-width: 15vw; */
+    max-height:60vh;
+
+
+
+    justify-content:center;
+    align-content:center;
+    align-items: center;
+    vertical-align: top;
+    border-radius: 10px;
+    box-shadow: 10px, 10px, 10px, 10px;
 }   
 
 .textBox{
@@ -37,4 +85,52 @@
     height:10vh;
     justify-content:center;
     border-radius:10px;
+}
+
+#buttonContainer{
+    display:flex;
+    justify-content:center;
+    gap: 5vh;
+    margin:2vh;
+}
+
+.buttonSize{
+    display:flex;
+    width:12vh;
+    height:12vh;
+    justify-content: center;
+    align-items: center;
+    border-radius: 500%;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+#textBoxes{
+    display: flex;
+    position: relative;
+    top: -32rem;
+    gap: 50vw;
+}
+
+#ratingText{
+    display: flex;
+    width: 25vw;
+    height: 25vh;
+    background-color: #eaeaea;
+    border-radius: 20px;
+    justify-content: center;
+    align-items:center;
+    margin-left: 2vw;
+}
+
+#colorText{
+    display: flex;
+    width: 25vw;
+    height: 25vh;
+    background-color: #eaeaea;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 2vw;
+    
 }

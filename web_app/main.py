@@ -24,6 +24,12 @@ Session(app)
 
 def run():
     # run all the model stuff
+    # scale the analagous, complementary, and split scores, give it out of 100%
+    # drip: at least 1 category is >0.8
+    # mid: somewhere in between
+    # skip: every category <0.5
+    pass
+
 
     
 
