@@ -1,12 +1,40 @@
 #title {
     display: flex; 
     justify-content: center; 
-    background-color: bisque; 
 
 }
 
-#videoplayer {
+/* #myVidPlayer {
+
+} */
+
+#main_container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.video {
     display: flex; 
-    justify-content: 
-    center; margin-top:100px;
+    border-radius: 20px;
+}
+
+.sideBox{
+    display: flex;
+    background-color: bisque;
+    width: 10vw;
+    height:5vh;
+    justify-content:center;
+    align-content:center;
+    align-items: center;
+    border-radius: 10px;
+}   
+
+.textBox{
+    display: flex;
+    background-color: slategray;
+    width:20vw;
+    height:10vh;
+    justify-content:center;
+    border-radius:10px;
 }
