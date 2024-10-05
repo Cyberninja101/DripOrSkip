@@ -1,74 +1,120 @@
 import numpy as np
+from cv2.gapi.wip.draw import Image
 from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 from collections import Counter
+from PIL import Image
+from rembg import remove
 import cv2
 import time
 import json
 
-def get_colors(imagePath, nColors=10):
-    #Gets image into color array and resizes image
+with open('colors.json', 'r') as f:
+    data = json.load(f)
+
+hex_rgb_colors = list(data.keys())
+rgb = np.dstack((np.asarray([int(hex[1:3], 16) for hex in hex_rgb_colors], np.uint8),
+                 np.asarray([int(hex[3:5], 16) for hex in hex_rgb_colors], np.uint8),
+                 np.asarray([int(hex[5:7], 16) for hex in hex_rgb_colors], np.uint8)))
+lab = rgb2lab(rgb)
+
+
+def getColors(imagePath, nColors=8):
+    # Gets image into color array and resizes image
     image = cv2.imread(imagePath)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     modImage = image.reshape(image.shape[0] * image.shape[1], 3)
+    # modImage = modImage[modImage != [0,0,0]]
 
-    #Gets clusters using K Means
+    # Gets clusters using K Means
     clf = KMeans(n_clusters=nColors)
     labels = clf.fit_predict(modImage)
     centerColor = clf.cluster_centers_
 
-    #Creates new dictionary based on the hexColors and the number of times they appear
+    # Creates new dictionary based on the hexColors and the number of times they appear
     counts = Counter(labels)
     orderedColor = [centerColor[i] for i in counts.keys()]
     hexColors = [RGB2HEX(orderedColor[i]) for i in counts.keys()]
     colorMapping = dict(zip(hexColors, counts.values()))
 
-    #Opens the colors json file
-    with open('colors.json', 'r') as f_in:
-        data = json.load(f_in)
-
-    #Instatiates every element of the final dictionary
+    # Gets the closest color and maps to the value in the finalColorMapping dictionary
     finalColorMapping = dict()
-    for hex in data:
-        finalColorMapping[data[hex]] = 0
-
-    #Gets the closest color and maps to the value in the finalColorMapping dictionary
+    keysArray = []
     for color in hexColors:
         colorName = colorConverter(color)
-        finalColorMapping[colorName] += colorMapping[color]
+        if (colorName in colorMapping):
+            finalColorMapping[colorName] += colorMapping[color]
+        elif colorName not in colorMapping and colorName != "#FFFF00":
+            finalColorMapping[colorName] = colorMapping[color]
+            keysArray.append(colorName)
 
-    del finalColorMapping["UNFUCKING USABLE PIECE OF GARBAGE SHIT"]
-    #Turns it into a numpy array and returns it
-    return np.array(list(finalColorMapping.values())).reshape(1, len(finalColorMapping))
+    # Removing garbage pixels and then turning everything into a percentile
+    if "#FFFF00" in finalColorMapping:
+        del finalColorMapping["#FFFF00"]
+
+    totalPixels = 0
+    totalPixels += np.sum(np.array(list(finalColorMapping.values())))
+
+    for key in keysArray:
+        finalColorMapping[key] = (finalColorMapping[key] / totalPixels)
+        if (finalColorMapping[key] < 0.05):
+            del finalColorMapping[key]
+
+    # Turns it into a numpy array and returns it
+    return finalColorMapping, keysArray
+
 
 def colorConverter(hex_color):
-    #Opens the colors json file
-    with open('colors.json', 'r') as f:
-        color_table = json.loads(f.read())
-
-    hex_rgb_colors = list(color_table.keys())
-    rgb = np.dstack((np.asarray([int(hex[1:3], 16) for hex in hex_rgb_colors], np.uint8), np.asarray([int(hex[3:5], 16) for hex in hex_rgb_colors], np.uint8), np.asarray([int(hex[5:7], 16) for hex in hex_rgb_colors], np.uint8)))
-    lab = rgb2lab(rgb)
-
+    # Getting CIELAB colorings of the hex_color
     peaked_rgb = np.asarray([int(hex_color[1:3], 16), int(hex_color[3:5], 16), int(hex_color[5:7], 16)], np.uint8)
     peaked_rgb = np.dstack((peaked_rgb[0], peaked_rgb[1], peaked_rgb[2]))
     peaked_lab = rgb2lab(peaked_rgb)
 
+    # Finding the distances to all colors inside of the table
     lab_dist = np.sqrt(
-        (lab[:, :, 0] - peaked_lab[:, :, 0])**2 + (lab[:, :, 1] - peaked_lab[:, :, 1])**2 + (lab[:, :, 2] - peaked_lab[:, :, 2])**2
+        (lab[:, :, 0] - peaked_lab[:, :, 0]) ** 2 + (lab[:, :, 1] - peaked_lab[:, :, 1]) ** 2 + (
+                    lab[:, :, 2] - peaked_lab[:, :, 2]) ** 2
     )
 
     # Get the index of the minimum distance
     min_index = lab_dist.argmin()
     peaked_closest_hex = hex_rgb_colors[min_index]
-    peaked_color_name = color_table[peaked_closest_hex]
 
-    return peaked_color_name
+    # Returning the closest color hex code
+    return peaked_closest_hex
+
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
 
+
+def denoise():
+    image = cv2.imread("output.png")
+    print(image.shape())
+    # Apply Gaussian blur
+    blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
+
+    # Resize the image
+    resized_image = cv2.resize(blurred_image, (width, height), interpolation=cv2.INTER_AREA)
+
+    # Save the resized image
+    cv2.imwrite('resized_image.jpg', resized_image)
+
+
+def bgremove1(input_path):  # 8 seconds
+    output_path = 'output.png'
+    input = Image.open(input_path)
+    output = remove(input, bgcolor=(255, 255, 0, 255))
+    output.save(output_path)
+
+
+def bgremove2():
+    print("fuck you")
+
+
+# function returns most prominent colors, with parameter n
 curr1 = time.time()
-get_colors("output.png", 100)
+#colorDict, keys = getColors("output.png", 20)
+denoise()
 curr2 = time.time()
-print("Current time in seconds since ", curr2-curr1)
+print("time to run ", curr2 - curr1)
