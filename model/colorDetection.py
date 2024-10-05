@@ -1,10 +1,7 @@
 import numpy as np
-from cv2.gapi.wip.draw import Image
 from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 from collections import Counter
-from PIL import Image
-from rembg import remove
 import cv2
 import time
 import json
