@@ -1,4 +1,5 @@
 import numpy as np
+from cv2.gapi.wip.draw import Image
 from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 from collections import Counter
@@ -22,7 +23,7 @@ def getColors(imagePath, nColors=8):
     image = cv2.imread(imagePath)
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
     modImage = image.reshape(image.shape[0] * image.shape[1], 3)
-    # modImage = modImage[modImage != [0,0,0]]
+    #modImage = modImage[modImage != [0,0,0]]
 
     # Gets clusters using K Means
     clf = KMeans(n_clusters=nColors)
@@ -37,14 +38,13 @@ def getColors(imagePath, nColors=8):
 
     # Gets the closest color and maps to the value in the finalColorMapping dictionary
     finalColorMapping = dict()
-    keysArray = []
     for color in hexColors:
         colorName = colorConverter(color)
-        if (colorName in colorMapping):
+        print(colorName)
+        if(colorName in colorMapping):
             finalColorMapping[colorName] += colorMapping[color]
         elif colorName not in colorMapping and colorName != "#FFFF00":
             finalColorMapping[colorName] = colorMapping[color]
-            keysArray.append(colorName)
 
     # Removing garbage pixels and then turning everything into a percentile
     if "#FFFF00" in finalColorMapping:
@@ -53,14 +53,14 @@ def getColors(imagePath, nColors=8):
     totalPixels = 0
     totalPixels += np.sum(np.array(list(finalColorMapping.values())))
 
+    keysArray = list(finalColorMapping.keys())
     for key in keysArray:
-        finalColorMapping[key] = (finalColorMapping[key] / totalPixels)
-        if (finalColorMapping[key] < 0.05):
+        finalColorMapping[key] = (finalColorMapping[key]/totalPixels)
+        if(finalColorMapping[key] < 0.05):
             del finalColorMapping[key]
 
     # Turns it into a numpy array and returns it
     return finalColorMapping, keysArray
-
 
 def colorConverter(hex_color):
     # Getting CIELAB colorings of the hex_color
@@ -70,8 +70,7 @@ def colorConverter(hex_color):
 
     # Finding the distances to all colors inside of the table
     lab_dist = np.sqrt(
-        (lab[:, :, 0] - peaked_lab[:, :, 0]) ** 2 + (lab[:, :, 1] - peaked_lab[:, :, 1]) ** 2 + (
-                    lab[:, :, 2] - peaked_lab[:, :, 2]) ** 2
+        (lab[:, :, 0] - peaked_lab[:, :, 0])**2 + (lab[:, :, 1] - peaked_lab[:, :, 1])**2 + (lab[:, :, 2] - peaked_lab[:, :, 2])**2
     )
 
     # Get the index of the minimum distance
@@ -80,7 +79,6 @@ def colorConverter(hex_color):
 
     # Returning the closest color hex code
     return peaked_closest_hex
-
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
@@ -100,9 +98,8 @@ def bgremove2():
 
     print("fuck you")
 
-
 # function returns most prominent colors, with parameter n
 curr1 = time.time()
-colorDict, keys = getColors("output.png", 20)
+colorDict, keys = getColors("output.png",20)
 curr2 = time.time()
 print("time to run ", curr2 - curr1)
