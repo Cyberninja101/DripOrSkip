@@ -2,6 +2,8 @@ import numpy as np
 from sklearn.cluster import KMeans
 from skimage.color import rgb2lab
 from collections import Counter
+from PIL import Image
+from rembg import remove
 import cv2
 import time
 import json
@@ -14,7 +16,6 @@ rgb = np.dstack((np.asarray([int(hex[1:3], 16) for hex in hex_rgb_colors], np.ui
                  np.asarray([int(hex[3:5], 16) for hex in hex_rgb_colors], np.uint8),
                  np.asarray([int(hex[5:7], 16) for hex in hex_rgb_colors], np.uint8)))
 lab = rgb2lab(rgb)
-
 
 def getColors(imagePath, nColors=8):
     # Gets image into color array and resizes image
@@ -83,6 +84,22 @@ def colorConverter(hex_color):
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
+
+def denoise():
+    image = cv2.imread("output.png")
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+
+def bgremove1(input_path): #8 seconds
+    output_path = 'output.png'
+    input = Image.open(input_path)
+    output = remove(input, bgcolor=(255, 255, 0, 255))
+    output.save(output_path)
+
+def bgremove2():
+
+    print("fuck you")
+
 
 # function returns most prominent colors, with parameter n
 curr1 = time.time()
