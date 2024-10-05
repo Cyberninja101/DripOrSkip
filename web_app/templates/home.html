@@ -13,7 +13,8 @@
             <div>
                 Rating
             </div>
-            <video id="myVidPlayer" muted></video>
+            <video class="video" id="myVidPlayer" muted></video>
+            <canvas class="video" id="myCanvas"></canvas>
             <div>
                 Color
             </div>
@@ -22,11 +23,9 @@
         
 
         <button onclick="snapshot()" >Snapshot</button>
+        <button onclick="retake()" >retake</button>
 
-        <div class="mycanvas">
-            <h6>Captured snapshot</h6>
-            <canvas></canvas>
-        </div>
+
 
         <script type = "text/javascript" src = "{{ url_for('static', filename = 'js/home.js') }}"></script>
 
