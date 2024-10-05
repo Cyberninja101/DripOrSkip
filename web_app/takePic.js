@@ -23,6 +23,7 @@ function capturePhoto() {
     canvasElement.width = videoElement.videoWidth;
     canvasElement.height = videoElement.videoHeight;
     canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
+    // switch to png
     const photoDataUrl = canvasElement.toDataURL('image/jpeg');
     photoElement.src = photoDataUrl;
     photoElement.style.display = 'block';

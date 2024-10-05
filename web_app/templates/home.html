@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <div>
+            <h2 id="title">  Fit Check  </h2>
+        </div>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+            
+
+    </head>
+    <body>
+        
+        <video id="myVidPlayer" muted></video>
+        
+
+        <button onclick="snapshot()" >Snapshot</button>
+
+        <div class="mycanvas">
+            <h6>Captured snapshot</h6>
+            <canvas></canvas>
+        </div>
+
+        <script type = "text/javascript" src = "{{ url_for('static', filename = 'js/home.js') }}"></script>
+
+
+    </body>
+
+
+
+
+    
+</html>
