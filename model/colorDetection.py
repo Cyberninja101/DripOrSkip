@@ -7,8 +7,6 @@ from skimage.color import rgb2lab
 import cv2
 from cv2.gapi.wip.draw import Image
 
-import kneed
-
 from PIL import Image
 from rembg import remove, new_session
 import matplotlib.pyplot as plt
