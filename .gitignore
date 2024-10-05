@@ -2,4 +2,6 @@ venv/
 .env
 .venv
 flask_session/
+
 .DS_Store
+
