@@ -1,2 +1,2 @@
-.venv
-flask_session
+venv/
+flask_session/
