@@ -40,15 +40,15 @@ def getColors(imagePath, nColors=8):
     finalColorMapping = dict()
     for color in hexColors:
         colorName = colorConverter(color)
-        print(colorName)
-        if(colorName in colorMapping):
+        # print(colorName)
+        if(colorName in finalColorMapping):
             finalColorMapping[colorName] += colorMapping[color]
-        elif colorName not in colorMapping and colorName != "#FFFF00":
+        elif colorName not in finalColorMapping and colorName != "#000000":
             finalColorMapping[colorName] = colorMapping[color]
 
     # Removing garbage pixels and then turning everything into a percentile
-    if "#FFFF00" in finalColorMapping:
-        del finalColorMapping["#FFFF00"]
+    if "#000000" in finalColorMapping:
+        del finalColorMapping["#000000"]
 
     totalPixels = 0
     totalPixels += np.sum(np.array(list(finalColorMapping.values())))
@@ -56,7 +56,7 @@ def getColors(imagePath, nColors=8):
     keysArray = list(finalColorMapping.keys())
     for key in keysArray:
         finalColorMapping[key] = (finalColorMapping[key]/totalPixels)
-        if(finalColorMapping[key] < 0.05):
+        if(finalColorMapping[key] < 0.1):
             del finalColorMapping[key]
 
     # Turns it into a numpy array and returns it
@@ -91,15 +91,18 @@ def denoise():
 def bgremove1(input_path): #8 seconds
     output_path = 'output.png'
     input = Image.open(input_path)
-    output = remove(input, bgcolor=(255, 255, 0, 255))
+    output = remove(input, bgcolor=(0, 0, 0, 255))
     output.save(output_path)
 
 def bgremove2():
 
     print("fuck you")
 
-# function returns most prominent colors, with parameter n
-curr1 = time.time()
-colorDict, keys = getColors("output.png",20)
-curr2 = time.time()
-print("time to run ", curr2 - curr1)
+if __name__ == '__main__':
+    # function returns most prominent colors, with parameter n
+    curr1 = time.time()
+    colorDict, keys = getColors("output.png",20)
+    print(colorDict)
+    print(keys)
+    curr2 = time.time()
+    print("time to run ", curr2 - curr1)
