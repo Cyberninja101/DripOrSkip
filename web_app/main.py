@@ -2,11 +2,15 @@ from flask import Flask, redirect, send_file, url_for, render_template, request,
 # The Session instance is not used for direct access, you should always use flask.session
 from flask_session import Session
 
+
+
 import os, shutil
 import binascii
 import sys
 import base64
 
+# import model stuff
+sys.path.insert(1, '/model')
 
 
 app = Flask(__name__)
@@ -16,6 +20,18 @@ app.config['SESSION_TYPE'] = 'filesystem'
 
 
 Session(app)
+
+
+def run():
+    # run all the model stuff
+    # scale the analagous, complementary, and split scores, give it out of 100%
+    # drip: at least 1 category is >0.8
+    # mid: somewhere in between
+    # skip: every category <0.5
+    pass
+
+
+    
 
 @app.route("/")
 def home():
@@ -40,11 +56,14 @@ def save_image():
 
     return jsonify(success=True)
 
-@app.route('/download')
-def download_file():
-    print("in download file func")
-    # Specify file path
-    return send_file('static/images/canvas_image.png', as_attachment=True)
+# @app.route('/download')
+# def download_file():
+#     print("in download file func")
+#     # Specify file path
+#     return send_file('static/images/canvas_image.png', as_attachment=True)
+
+
+
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader = False, host="0.0.0.0", port=8000) # Set debug = True for live changes in development
