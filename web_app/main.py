@@ -74,7 +74,7 @@ def save_image():
     # Calculate drip mid or skip
     if (analogous_score >= 0.7 or complimentary_score >= 0.7 or split_score >= 0.7):
         message = "Drip"
-    elif (analogous_score >= 0.4 or complimentary_score >= 0.4 or split_score >= 0.4):
+    elif (analogous_score >= 0.6 or complimentary_score >= 0.6 or split_score >= 0.6):
         message = "Mid"
     else:
         message = "Skip"
