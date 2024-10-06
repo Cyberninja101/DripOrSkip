@@ -89,9 +89,7 @@ def getColors(imagePath, trials = 25):
         finalColors[i] = "#" + r + g + b
 
     ColorsDict = dict(zip(finalColors, probCluster))
-    print(ColorsDict)
     return ColorsDict
-
 
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
