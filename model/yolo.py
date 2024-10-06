@@ -17,7 +17,11 @@ def getColours(cls_num):
 
 def crop_image(file: str):
     model = YoloDetector(target_size=720, device="cpu", min_face=90)
-    orgimg = np.array(Image.open(sys.path[0] + "/" + file))
+    image = Image.open(sys.path[0] + "/" + file)
+    image = image.convert("RGB")
+    image = np.asarray(image, dtype=np.float32) / 255
+    image = image[:,:,:3]
+    orgimg = image
     bboxes, points = model.predict(orgimg)
     crops = model.align(orgimg, points[0])
     yolo = YOLO('yolov5s.pt')
@@ -55,6 +59,7 @@ def crop_image(file: str):
 
         # draw the rectangle
         cv2.rectangle(image, (x1, y1), (x2, y2), colour, 2)
+        cv2.imwrite("croptest.png", image)
         for j in bboxes[0]:
             if j[3] > y1 and j[2] < x2 and j[0] > x1:
                 finalimage = finalimage.crop((x1, j[3], x2, y2))

@@ -3,6 +3,7 @@ import sys
 import colorDetection, yolo, cvtcolor
 
 
+
 def check_analogous(base, compare):
     lower = base[0] - 30
     upper = base[0] + 30
@@ -59,9 +60,10 @@ def drip(image):
     :return: an arr of length 2: first element is a tuple of nums (number of colors, analogous score, complimentary
              score, split complimentary score), second element is a dictionary of all the colors
     """
+
     path = yolo.crop_image(image)
     colorDetection.bgremove1(path)
-    colorDict, keys = colorDetection.getColors("output.png",20)
+    colorDict, keys = colorDetection.getColors("output.png")
     print(colorDict)
     print(keys)
     rgbs = [i[1:] for i in list(colorDict.keys())]

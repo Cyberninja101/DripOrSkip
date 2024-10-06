@@ -9,8 +9,11 @@ import binascii
 import sys
 import base64
 
+
 # import model stuff
-sys.path.insert(1, '/model')
+path = os.getcwd()
+sys.path.insert(1, os.path.join(path, "model"))
+from helper import drip
 
 
 app = Flask(__name__)
@@ -22,13 +25,13 @@ app.config['SESSION_TYPE'] = 'filesystem'
 Session(app)
 
 
-def run():
+def run_model():
     # run all the model stuff
     # scale the analagous, complementary, and split scores, give it out of 100%
     # drip: at least 1 category is >0.8
     # mid: somewhere in between
     # skip: every category <0.5
-    pass
+    print(drip("/static/images/canvas_image.png"))
 
 
     
@@ -53,6 +56,8 @@ def save_image():
         
 
     # run AI to rate photo 
+
+    run_model()
 
     return jsonify(success=True)
 
