@@ -64,10 +64,12 @@ def drip(image):
 
     path = yolo.crop_image(image)
     colorDetection.bgremove1(path)
-    colorDict, keys = colorDetection.getColors("web_app/new.png")
+    colorDict = colorDetection.getColors("web_app/new.png")
+    outputProm = colorDetection.promColors(colorDict)
     print(colorDict)
-    print(keys)
-    rgbs = [i[1:] for i in list(colorDict.keys())]
+    print(outputProm)
+
+    rgbs = [i[1:] for i in list(outputProm.keys())]
     rgbs.sort(key=lambda x: colorDict["#"+x], reverse=True)
     print(rgbs)
     hsls = []
