@@ -58,9 +58,9 @@ def save_image():
     # Unpacking everything
     num_colors, analogous_score, complimentary_score, split_score = everything[0]
     promColorArray = everything[1]
-    analogous_score = analogous_score/(num_colors - 1)
-    complimentary_score = complimentary_score/num_colors
-    split_score = split_score/num_colors
+    analogous_score = analogous_score/(num_colors - 1) if num_colors > 1 else analogous_score
+    complimentary_score = complimentary_score/(num_colors - 1) if num_colors > 1 else complimentary_score
+    split_score = split_score/(num_colors - 1) if num_colors > 1 else split_score
 
     print("analogous score: ", analogous_score)
     print("complimentary score: ", complimentary_score)
