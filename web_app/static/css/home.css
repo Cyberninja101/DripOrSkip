@@ -10,6 +10,20 @@ body {
     font-family: "Ubuntu";
 }
 
+
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center items horizontally */
+}
+
+#logo {
+    margin-left: 1vw;
+    width: 90px;
+    height: auto; /* Maintain aspect ratio */
+}
+
 #backColor{
     background: rgb(247,247,247);
     background: linear-gradient(90deg, #eaeaea 0%, #cef4ff 100%);
@@ -19,8 +33,8 @@ body {
 }
 
 #title {
-    display: flex; 
-    justify-content: center; 
+    /* display: flex;  */
+    /* justify-content: center;  */
     font-weight: bolder;
     font-size: 3rem;
     font-family: "Ubuntu";
