@@ -1,6 +1,8 @@
 import sys
 
 import colorDetection, yolo, cvtcolor
+from PIL import Image
+
 
 
 def check_analogous(base, compare):
@@ -59,11 +61,10 @@ def drip(image):
     :return: an arr of length 2: first element is a tuple of nums (number of colors, analogous score, complimentary
              score, split complimentary score), second element is a dictionary of all the colors
     """
+
     path = yolo.crop_image(image)
-    colorDetection.bgremove1(path)
-    colorDict, keys = colorDetection.getColors("output.png",20)
+    colorDict = colorDetection.getColors("output.png")
     print(colorDict)
-    print(keys)
     rgbs = [i[1:] for i in list(colorDict.keys())]
     rgbs.sort(key=lambda x: colorDict["#"+x], reverse=True)
     print(rgbs)
@@ -73,13 +74,17 @@ def drip(image):
     print(hsls)
     analogous_score, complimentary_score, split_score = 0, 0, 0
 
-    for i in range(len(hsls)):
-        for j in range(i, len(hsls)):
-            if i == j:
-                continue
-            analogous_score += check_analogous(hsls[i], hsls[j])
-            complimentary_score += check_complimentary(hsls[i], hsls[j])
-            split_score += check_split(hsls[i], hsls[j])
+    for j in range(1, len(hsls)):
+        analogous_score += check_analogous(hsls[0], hsls[j])
+        complimentary_score += check_complimentary(hsls[0], hsls[j])
+        split_score += check_split(hsls[0], hsls[j])
+    # for i in range(len(hsls)):
+    #     for j in range(i, len(hsls)):
+    #         if i == j:
+    #             continue
+    #         analogous_score += check_analogous(hsls[i], hsls[j])
+    #         complimentary_score += check_complimentary(hsls[i], hsls[j])
+    #         split_score += check_split(hsls[i], hsls[j])
     return [(len(hsls), analogous_score, complimentary_score, split_score), colorDict]
 
 

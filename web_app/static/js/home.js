@@ -32,17 +32,19 @@ function snapshot(){
             'Content-Type': 'application/json'
         }
     })
-
-    // // this stuff is for downloading client side
-    // .then(response => response.json())
-    // .then(data => {
-    //     if (data.success) {
-    //         window.location.href = '/download';  // Redirect to download after saving
-    //     }
-    // });
-
-
-}
+    .then(response => {
+        if (response.redirected) {
+            // If the response indicates a redirect, navigate to the new location
+            window.location.href = response.url;
+        } else {
+            // Handle other responses as needed
+            return response.json();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+};
 
 window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .then(stream => {

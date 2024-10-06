@@ -10,8 +10,11 @@ from rembg import remove, new_session
 
 import time
 import json
+import sys, os
 
-with open('colors.json', 'r') as f:
+sys.path.insert(1, os.path.join(os.getcwd(), "model"))
+
+with open(os.path.join(os.getcwd(), "model", "colors.json"), 'r') as f:
     data = json.load(f)
 
 hex_rgb_colors = list(data.keys())
