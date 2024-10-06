@@ -63,3 +63,13 @@ window.navigator.mediaDevices.getUserMedia({ video: true, audio: true })
     .catch(error => {
         alert('You have to enable the mic and the camera');
     });
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const hexItems = document.querySelectorAll('.hex-item');
+
+        hexItems.forEach(item => {
+            const hexCode = item.getAttribute('data-hex');
+            item.style.color = hexCode;  // Apply the hex code as the text color
+        });
+    });
