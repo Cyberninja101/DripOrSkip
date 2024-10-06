@@ -32,7 +32,7 @@
                 <h1>Colors</h1>
                 <ul> 
                     {% for color in promColorArray %} 
-                        <li>{{ color }}</li> 
+                        <li class="hex-item" data-hex="{{ color }}">{{ color }}</li> 
                     {% endfor %} 
                 </ul> 
             </div>
