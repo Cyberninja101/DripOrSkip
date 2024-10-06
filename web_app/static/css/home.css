@@ -64,9 +64,10 @@ body {
 #colorBox{
     display: flex;
     background-color: #ffffff;
-    width: 15å  QZWSvw;
+    width: 15vw;
     /* max-width: 15vw; */
     max-height:60vh;
+    flex-direction: column;
 
 
 

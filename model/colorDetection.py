@@ -23,15 +23,13 @@ rgb = np.dstack((np.asarray([int(hex[1:3], 16) for hex in hex_rgb_colors], np.ui
                  np.asarray([int(hex[5:7], 16) for hex in hex_rgb_colors], np.uint8)))
 lab = rgb2lab(rgb)
 
-def getColors(imagePath, trials = 250):
+def getColors(imagePath, trials = 75):
     # Preprocessing image
     image = cv2.imread(imagePath)
-    halfImage = cv2.resize(image, (0, 0), fx=0.1, fy=0.1)
-    halfImage = cv2.cvtColor(halfImage, cv2.COLOR_BGR2RGB)
-    output = remove(halfImage, session=new_session("u2netp"), bgcolor=(0, 0, 0, 255))
+    cv2.imwrite("img69.png", image)
+    output = remove(image, session=new_session("u2netp"), bgcolor=(0, 0, 0, 255))
     output = output[:,:,:3]
     blur = cv2.medianBlur(output, 5)
-    cv2.imwrite("img1.png", blur)
     modImage = blur.reshape(blur.shape[0] * blur.shape[1], 3)
     modImage = modImage[~np.all(modImage == [0, 0, 0], axis=1)]
 
@@ -116,17 +114,17 @@ def RGB2HEX(color):
 
 def promColors(colorDict, threshold = 0.08):
     sortedColorDict = dict(sorted(colorDict.items(), key=lambda item: item[1], reverse=True))
-    output = np.array([])
+    output = []
     for key in sortedColorDict.keys():
         if(sortedColorDict[key] > threshold):
-            output = np.append(output, np.array([data[key].replace("-", " ").capitalize(), str(round(sortedColorDict[key]*100, 2))]))
+            output.append(key)
     return output
 
 
 if __name__ == '__main__':
     # function returns most prominent colors, with parameter n
     curr1 = time.time()
-    colorDict = getColors("3.png")
+    colorDict = getColors("output.png")
     print(promColors(colorDict))
     curr2 = time.time()
     print("time to run ", curr2 - curr1)

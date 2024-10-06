@@ -3,6 +3,7 @@ from flask_session import Session
 import os
 import base64
 import sys
+import json
 
 # import model stuff
 path = os.getcwd()
@@ -31,12 +32,13 @@ def home():
     complimentary_score = request.args.get('complimentary_score', default=0, type=float)
     split_score = request.args.get('split_score', default=0, type=float)
     message = request.args.get('message', default="", type=str)
-    # print("Retrieved analogous score in home:", analogous_score)  # Debug output
-    return render_template("home.html", message=message,analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score)
+    promColorArray = request.args.get('promColorArray', default=json.dumps(["", ""]), type=str)
+    promColorArray = json.loads(promColorArray) 
 
-@app.route("/cam")
-def cam():
-    return render_template("cam.html")
+    print("This is right before entry: ", promColorArray)
+    # print("Retrieved analogous score in home:", analogous_score)  # Debug output
+    return render_template("home.html", message=message,analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score, promColorArray=promColorArray)
+
 
 # Save image
 @app.route('/save_image', methods=['POST'])
@@ -55,7 +57,7 @@ def save_image():
 
     # Unpacking everything
     num_colors, analogous_score, complimentary_score, split_score = everything[0]
-    colorDict = everything[1]
+    promColorArray = everything[1]
     analogous_score = analogous_score/(num_colors - 1)
     complimentary_score = complimentary_score/num_colors
     split_score = split_score/num_colors
@@ -70,14 +72,20 @@ def save_image():
 
     message = ""
     # Calculate drip mid or skip
-    if (analogous_score > 0.7 or complimentary_score > 0.7 or split_score > 0.7):
+    if (analogous_score >= 0.5 or complimentary_score >= 0.5 or split_score >= 0.5):
         message = "Drip"
-    elif (analogous_score < 0.5 or complimentary_score < 0.5 or split_score < 0.5):
-        message = "Skip"
-    else:
+    elif (analogous_score >= 0.2 or complimentary_score >= 0.2 or split_score >= 0.2):
         message = "Mid"
+    else:
+        message = "Skip"
 
-    return redirect(url_for("home", message=message, analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score))
+    # set color shit
+
+    
+    print(promColorArray)
+
+
+    return redirect(url_for("home", message=message, analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score, promColorArray=json.dumps(promColorArray)))
 
 
 if __name__ == "__main__":

@@ -1,7 +1,9 @@
-import sys
+import sys, os
 
 import colorDetection, yolo, cvtcolor
 from PIL import Image
+
+path = os.getcwd()
 
 
 
@@ -63,9 +65,12 @@ def drip(image):
     """
 
     path = yolo.crop_image(image)
-    colorDict = colorDetection.getColors("output.png")
+    # changed to web_app/
+    colorDict = colorDetection.getColors("web_app/new.png")
+    promColorArr = colorDetection.promColors(colorDict)
     print(colorDict)
-    rgbs = [i[1:] for i in list(colorDict.keys())]
+    print(promColorArr)
+    rgbs = [i[1:] for i in promColorArr]
     rgbs.sort(key=lambda x: colorDict["#"+x], reverse=True)
     print(rgbs)
     hsls = []
@@ -85,8 +90,8 @@ def drip(image):
     #         analogous_score += check_analogous(hsls[i], hsls[j])
     #         complimentary_score += check_complimentary(hsls[i], hsls[j])
     #         split_score += check_split(hsls[i], hsls[j])
-    return [(len(hsls), analogous_score, complimentary_score, split_score), colorDict]
+    return [(len(hsls), analogous_score, complimentary_score, split_score), promColorArr]
 
 
 if __name__ == "__main__":
-    print(drip("andrewdataset.jpeg"))
+    print(drip("canvas_image.png"))

@@ -64,7 +64,7 @@ def crop_image(file: str):
                 y1 = j[3]
                 cv2.rectangle(image, (j[0], j[1]), (j[2], j[3]), colour, 2)
         
-        finalimage = finalimage.crop((x1, y1, x2, y2))
+        finalimage = finalimage.crop((x1, y1*1.2, x2, y2))
 
         # put the class name and confidence on the image
         cv2.putText(image, f'{classes_names[int(boxreal.cls[0])]} {box.conf[0]:.2f}', (x1, y1),
