@@ -1,14 +1,8 @@
-from flask import Flask, redirect, send_file, url_for, render_template, request, session, jsonify
-# The Session instance is not used for direct access, you should always use flask.session
+from flask import Flask, redirect, url_for, render_template, request
 from flask_session import Session
-
-
-
-import os, shutil
-import binascii
-import sys
+import os
 import base64
-
+import sys
 
 # import model stuff
 path = os.getcwd()
@@ -20,55 +14,71 @@ app = Flask(__name__)
 app.secret_key = "1234"
 app.config["SESSION_PERMANENT"] = False
 app.config['SESSION_TYPE'] = 'filesystem'
-
-
+# app.config['TEMPLATES_AUTO_RELOAD'] = True
 Session(app)
 
 
-def run_model():
-    # run all the model stuff
-    # scale the analagous, complementary, and split scores, give it out of 100%
-    # drip: at least 1 category is >0.8
-    # mid: somewhere in between
-    # skip: every category <0.5
-    print(drip("/static/images/canvas_image.png"))
-
-
-    
+# Global analagous
+# analogous_score = 0
 
 @app.route("/")
 def home():
     """
-    This is the home/default page. ok
+    This is the home/default page.
     """
+    # Retrieve the analogous_score from the query parameters
+    analogous_score = request.args.get('analogous_score', default=0, type=float)
+    complimentary_score = request.args.get('complimentary_score', default=0, type=float)
+    split_score = request.args.get('split_score', default=0, type=float)
+    message = request.args.get('message', default="", type=str)
+    # print("Retrieved analogous score in home:", analogous_score)  # Debug output
+    return render_template("home.html", message=message,analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score)
 
-    return render_template("home.html")
+@app.route("/cam")
+def cam():
+    return render_template("cam.html")
 
-# save image
+# Save image
 @app.route('/save_image', methods=['POST'])
 def save_image():
+    # global analogous_score
+
     data = request.json['image']
     image_data = data.split(',')[1]  # Get the base64 part
-    output_file_path = os.path.join('web_app','static','images', 'canvas_image.png')
+    output_file_path = os.path.join('web_app', 'static', 'images', 'canvas_image.png')
     
-    with open(output_file_path, 'wb') as f:  # Open file in binary write mode
+    with open(output_file_path, 'wb') as f:
         f.write(base64.b64decode(image_data))  # Write the decoded image data to file
-        
 
-    # run AI to rate photo 
+    # Run AI to rate photo
+    everything = drip("/static/images/canvas_image.png")
 
-    run_model()
+    # Unpacking everything
+    num_colors, analogous_score, complimentary_score, split_score = everything[0]
+    colorDict = everything[1]
+    analogous_score = analogous_score/(num_colors - 1)
+    complimentary_score = complimentary_score/num_colors
+    split_score = split_score/num_colors
 
-    return jsonify(success=True)
+    print("analogous score: ", analogous_score)
+    print("complimentary score: ", complimentary_score)
+    print("split score: ", split_score)
 
-# @app.route('/download')
-# def download_file():
-#     print("in download file func")
-#     # Specify file path
-#     return send_file('static/images/canvas_image.png', as_attachment=True)
+    
+    print("HIIII, this is save_image")
+    # Redirect with the updated analogous score
 
+    message = ""
+    # Calculate drip mid or skip
+    if (analogous_score > 0.7 or complimentary_score > 0.7 or split_score > 0.7):
+        message = "Drip"
+    elif (analogous_score < 0.5 or complimentary_score < 0.5 or split_score < 0.5):
+        message = "Skip"
+    else:
+        message = "Mid"
 
+    return redirect(url_for("home", message=message, analogous_score=analogous_score, complimentary_score=complimentary_score, split_score=split_score))
 
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader = False, host="0.0.0.0", port=8000) # Set debug = True for live changes in development
+    app.run(debug=True, use_reloader=False, host="0.0.0.0", port=8000)

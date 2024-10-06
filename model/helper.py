@@ -75,13 +75,17 @@ def drip(image):
     print(hsls)
     analogous_score, complimentary_score, split_score = 0, 0, 0
 
-    for i in range(len(hsls)):
-        for j in range(i, len(hsls)):
-            if i == j:
-                continue
-            analogous_score += check_analogous(hsls[i], hsls[j])
-            complimentary_score += check_complimentary(hsls[i], hsls[j])
-            split_score += check_split(hsls[i], hsls[j])
+    for j in range(1, len(hsls)):
+        analogous_score += check_analogous(hsls[0], hsls[j])
+        complimentary_score += check_complimentary(hsls[0], hsls[j])
+        split_score += check_split(hsls[0], hsls[j])
+    # for i in range(len(hsls)):
+    #     for j in range(i, len(hsls)):
+    #         if i == j:
+    #             continue
+    #         analogous_score += check_analogous(hsls[i], hsls[j])
+    #         complimentary_score += check_complimentary(hsls[i], hsls[j])
+    #         split_score += check_split(hsls[i], hsls[j])
     return [(len(hsls), analogous_score, complimentary_score, split_score), colorDict]
 
 

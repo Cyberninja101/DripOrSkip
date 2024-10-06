@@ -62,8 +62,10 @@ def crop_image(file: str):
         cv2.imwrite("croptest.png", image)
         for j in bboxes[0]:
             if j[3] > y1 and j[2] < x2 and j[0] > x1:
-                finalimage = finalimage.crop((x1, j[3], x2, y2))
+                y1 = j[3]
                 cv2.rectangle(image, (j[0], j[1]), (j[2], j[3]), colour, 2)
+        
+        finalimage = finalimage.crop((x1, y1, x2, y2))
 
         # put the class name and confidence on the image
         cv2.putText(image, f'{classes_names[int(boxreal.cls[0])]} {box.conf[0]:.2f}', (x1, y1),
