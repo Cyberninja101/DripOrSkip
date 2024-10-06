@@ -1,6 +1,7 @@
 import sys
 
 import colorDetection, yolo, cvtcolor
+from PIL import Image
 
 
 
@@ -62,10 +63,8 @@ def drip(image):
     """
 
     path = yolo.crop_image(image)
-    colorDetection.bgremove1(path)
-    colorDict, keys = colorDetection.getColors("output.png")
+    colorDict = colorDetection.getColors("output.png")
     print(colorDict)
-    print(keys)
     rgbs = [i[1:] for i in list(colorDict.keys())]
     rgbs.sort(key=lambda x: colorDict["#"+x], reverse=True)
     print(rgbs)

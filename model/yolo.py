@@ -23,7 +23,6 @@ def crop_image(file: str):
     image = image[:,:,:3]
     orgimg = image
     bboxes, points = model.predict(orgimg)
-    crops = model.align(orgimg, points[0])
     yolo = YOLO('yolov5s.pt')
     image = cv2.imread(sys.path[0] + "/" + file, 1)
     finalimage = Image.open(sys.path[0] + "/" + file)
