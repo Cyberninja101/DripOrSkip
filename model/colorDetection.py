@@ -111,11 +111,6 @@ def colorConverter(hex_color):
 def RGB2HEX(color):
     return "#{:02x}{:02x}{:02x}".format(int(color[0]), int(color[1]), int(color[2]))
 
-def bgremove1(input_path, output_path): #8 seconds
-    input = cv2.cvtColor(cv2.imread(input_path), cv2.COLOR_BGR2RGB)
-    output = remove(input, session=new_session("u2net"), bgcolor=(0, 0, 0, 255))
-    output.save(output_path)
-
 def promColors(colorDict, threshold = 0.08):
     sortedColorDict = dict(sorted(colorDict.items(), key=lambda item: item[1], reverse=True))
     output = np.array([])
